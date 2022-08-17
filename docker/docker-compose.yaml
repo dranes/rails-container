@@ -1,0 +1,23 @@
+version: '3'
+services: 
+  mysql:
+    image: mysql:5.7
+    platform: linux/amd64
+    ports: 
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+      - ./mysql/mysql-init.sql:/docker-entrypoint-initdb.d/mysql-init.sql
+  rails:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    platform: linux/amd64
+    ports: 
+      - "3000:3000"
+    volumes:
+      - ../:/var/www/code
+    depends_on:
+      - mysql
